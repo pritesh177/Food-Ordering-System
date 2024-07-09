@@ -1,5 +1,6 @@
 package com.FOS.Foody.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -42,5 +43,9 @@ public class Restaurant {
 
         private LocalDateTime registrationDate;
         private boolean open;
+
+        @JsonIgnore
+        @OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL)
+        private List<Food> foods=new ArrayList<>();
 
     }
