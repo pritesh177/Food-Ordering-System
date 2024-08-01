@@ -18,7 +18,7 @@ public class IngredientController {
 
     @Autowired
     private IngredientService ingredientService;
-    
+
     @PostMapping("/category")
     public ResponseEntity<IngredientCategory> createIngredientCategory(
             @RequestBody IngredientCategoryRequest req
