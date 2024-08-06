@@ -3,7 +3,9 @@ package com.FOS.Foody.Controller;
 import com.FOS.Foody.Request.AddCartItemRequest;
 import com.FOS.Foody.Request.UpdateClassItemRequest;
 import com.FOS.Foody.Service.CartService;
+import com.FOS.Foody.Service.UserService;
 import com.FOS.Foody.model.Cart;
+import com.FOS.Foody.model.User;
 import com.FOS.Foody.model.cartItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,9 @@ import org.springframework.web.bind.annotation.*;
 public class CartController {
     @Autowired
     private CartService cartService;
+
+    @Autowired
+    private UserService userService;
 
     @PutMapping("/cart/add")
     public ResponseEntity<cartItem> addItemToCart(@RequestBody AddCartItemRequest req,
@@ -39,7 +44,15 @@ public class CartController {
 
     @PutMapping("/cart/clear")
     public ResponseEntity<Cart> clearCart(@RequestHeader("Authorization") String jwt) throws Exception{
-    Cart cart=cartService.cleanCart(jwt);
-    return new ResponseEntity<>(cart,HttpStatus.OK);
+        User user=userService.findByJwtToken(jwt);
+        Cart cart=cartService.cleanCart(user.getId());
+        return new ResponseEntity<>(cart,HttpStatus.OK);
+    }
+
+    @GetMapping("/cart")
+    public ResponseEntity<Cart> findUserCart(@RequestHeader("Authorization") String jwt) throws Exception{
+        User user=userService.findByJwtToken(jwt);
+        Cart cart=cartService.findCartByUserId(user.getId());
+        return new ResponseEntity<>(cart,HttpStatus.OK);
     }
 }
